@@ -15,7 +15,15 @@ int main()
     Node root;
     root.name = "root";
     root.isDirectory = true;
-    root.llink = nullptr;
+
+    Node Academics;
+    Academics.name = "Academics";
+    Academics.isDirectory = true;
+
+    Academics.llink = nullptr;
+    Academics.rlink = nullptr;
+
+    root.llink = &Academics;
     root.rlink = nullptr;
 
     cout << root.name << endl;
