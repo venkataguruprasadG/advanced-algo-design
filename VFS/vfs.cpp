@@ -65,6 +65,23 @@ void display(Node *node, int depth = 0)
         node = node->rlink;
     }
 }
+
+bool search(Node *node, string name)
+{
+    while (node->name != name)
+    {
+        return true;
+
+        if (search(node->llink, name))
+        {
+            return true;
+        }
+
+        node = node->rlink;
+    }
+    return false;
+}
+
 int main()
 {
     Node *root = createNode("Root", true);
@@ -79,5 +96,14 @@ int main()
     insertChild(academics, marks);
 
     display(root);
+
+    if (search(root, "Marks.txt"))
+    {
+        cout << "File found\n";
+    }
+    else
+    {
+        cout << "File not found\n";
+    }
     return 0;
 }
