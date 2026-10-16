@@ -21,24 +21,63 @@ Node *createNode(string name, bool isDirectory)
     return newNode;
 }
 
+void insertChild(Node *parent, Node *newNode)
+{
+    if (parent == nullptr || !parent->isDirectory)
+    {
+        cout << "Invalid parent directory\n";
+        return;
+    }
+
+    if (parent->llink == nullptr)
+    {
+        parent->llink = newNode;
+        return;
+    }
+
+    Node *temp = parent->llink;
+
+    while (temp->rlink != nullptr)
+    {
+        temp = temp->rlink;
+    }
+
+    temp->rlink = newNode;
+}
+
+void display(Node *node, int depth = 0)
+{
+    if (node = nullptr)
+    {
+        return;
+    }
+
+    for (int i = 0; i < depth; i++)
+    {
+        cout << " ";
+    }
+
+    cout << node->name << endl;
+
+    while (node != nullptr)
+    {
+        display(node->llink, depth + 1);
+        node = node->rlink;
+    }
+}
 int main()
 {
     Node *root = createNode("Root", true);
     Node *academics = createNode("Academics", true);
-    Node *personal = createNode("personal", false);
+
+    insertChild(root, academics);
+
     Node *assignment = createNode("Assignment.pdf", false);
+    Node *marks = createNode("Marks.txt", false);
 
-    root->llink = academics;
-    academics->rlink = personal;
-    academics->llink = assignment;
+    insertChild(academics, assignment);
+    insertChild(academics, marks);
 
-    personal->llink = nullptr;
-    personal->rlink = nullptr;
-
-    cout << root->name << endl;
-    cout << root->llink->name << endl;
-    cout << root->llink->rlink->name << endl;
-    cout << root->llink->llink->name << endl;
-
+    display(root);
     return 0;
 }
