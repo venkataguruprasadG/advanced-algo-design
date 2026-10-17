@@ -47,7 +47,7 @@ void insertChild(Node *parent, Node *newNode)
 
 void display(Node *node, int depth = 0)
 {
-    if (node = nullptr)
+    if (node == nullptr)
     {
         return;
     }
@@ -82,6 +82,46 @@ bool search(Node *node, string name)
     return false;
 }
 
+bool deleteFile(Node *parent, string target)
+{
+    if (parent == nullptr || !parent->isDirectory)
+    {
+        return false;
+    }
+
+    Node *current = parent->llink;
+    Node *previous = nullptr;
+
+    while (current != nullptr)
+    {
+        if (current->name == target)
+        {
+            if (current->isDirectory)
+            {
+                cout << "Target is a directory\n";
+                return false;
+            }
+
+            if (previous == nullptr)
+            {
+                parent->llink = current->rlink;
+            }
+            else
+            {
+                previous->rlink = current->rlink;
+            }
+
+            delete current;
+            return true;
+        }
+
+        previous = current;
+        current = current->rlink;
+    }
+
+    return false;
+}
+
 int main()
 {
     Node *root = createNode("Root", true);
@@ -105,5 +145,16 @@ int main()
     {
         cout << "File not found\n";
     }
+
+    if (deleteFile(academics, "Assignment.pdf"))
+    {
+        cout << "File deleted\n";
+    }
+    else
+    {
+        cout << "Deletion failed\n";
+    }
+
+    display(root);
     return 0;
 }
