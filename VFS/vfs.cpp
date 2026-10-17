@@ -11,21 +11,39 @@ struct Node
     Node *rlink;
 };
 
+const int MAX = 100;
+int cnt = 0;
+
 Node *createNode(string name, bool isDirectory)
 {
+    if (cnt >= MAX)
+    {
+        cout << "Maximum node limit reached\n";
+        return nullptr;
+    }
+
     Node *newNode = new Node;
     newNode->name = name;
     newNode->isDirectory = isDirectory;
     newNode->llink = nullptr;
     newNode->rlink = nullptr;
+
+    cnt++;
     return newNode;
 }
 
 void insertChild(Node *parent, Node *newNode)
 {
+    if (newNode == nullptr)
+    {
+        cout << "Invalid new node\n";
+        return;
+    }
     if (parent == nullptr || !parent->isDirectory)
     {
         cout << "Invalid parent directory\n";
+        delete newNode;
+        cnt--;
         return;
     }
 
@@ -43,6 +61,49 @@ void insertChild(Node *parent, Node *newNode)
     }
 
     temp->rlink = newNode;
+}
+
+bool deleteDirectory(Node *parent, string target)
+{
+    if (parent == nullptr || !parent->isDirectory)
+    {
+        return false;
+    }
+
+    Node *current = parent->llink;
+    Node *previous = nullptr;
+
+    while (current != nullptr)
+    {
+        if (current->name == target)
+        {
+            // Target must be an empty directory
+            if (!current->isDirectory ||
+                current->llink != nullptr)
+            {
+                return false;
+            }
+
+            // Remove the directory from the sibling chain
+            if (previous == nullptr)
+            {
+                parent->llink = current->rlink;
+            }
+            else
+            {
+                previous->rlink = current->rlink;
+            }
+
+            delete current;
+            cnt--;
+            return true;
+        }
+
+        previous = current;
+        current = current->rlink;
+    }
+
+    return false;
 }
 
 void display(Node *node, int depth = 0)
@@ -112,6 +173,7 @@ bool deleteFile(Node *parent, string target)
             }
 
             delete current;
+            cnt--;
             return true;
         }
 
